@@ -1,1 +1,21 @@
-Account Name: BGE Community Solar Pilot Program
+project: BGE Community Solar Pilot Program
+project_id: 0081565
+
+metadata:
+  path: data/sample_communiuty_solar_data_2025_03_04.xlsx
+  sheet: Community Solar Data
+  values:
+    report_run_date: B3
+    period_start_date: B4
+    period_end_date: B5
+    account_id: E3
+    account_name: E4
+    electric_choice_id: E5
+    bge_csegs_pilot_project_id: E6
+    notes: I3
+    some_other_field: null
+
+energy_data:
+  path: data/sample_community_solar_data_2025_03_04.xlsx
+  sheet: Community Solar Data
+  header_row: 7
