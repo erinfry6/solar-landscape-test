@@ -16,6 +16,9 @@ metadata:
     some_other_field: null
 
 energy_data:
-  path: data/sample_community_solar_data_2025_03_04.xlsx
+  path: data/sample_communiuty_solar_data_2025_03_04.xlsx
   sheet: Community Solar Data
-  header_row: 7
+  header_row: 6
+  column_mapping:
+    Final Bank Balance kWh: Final Balance kWh
+    Initial Bank Balance kWh: Initial Balance kWh

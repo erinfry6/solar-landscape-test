@@ -57,8 +57,12 @@ class CommunitySolar:
         Load energy data from the specified Excel file and sheet.
         """
         energy_data = pd.read_excel(self.data_config['path'], sheet_name=self.data_config['sheet'], header=self.data_config['header_row'])
+        rename_columns = self.data_config['column_mapping']
+        if rename_columns:
+            energy_data.rename(columns=rename_columns, inplace=True)
+        
         return energy_data
 
 if __name__ == "__main__":
     solar_data = CommunitySolar()
-    print(solar_data.process_metadata())
+    print(solar_data.get_energy_data().columns)
