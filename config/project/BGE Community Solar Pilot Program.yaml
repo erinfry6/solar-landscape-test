@@ -20,5 +20,16 @@ energy_data:
   sheet: Community Solar Data
   header_row: 6
   column_mapping:
-    Final Bank Balance kWh: Final Balance kWh
-    Initial Bank Balance kWh: Initial Balance kWh
+    Subscriber Choice ID: subscriber_choice_id
+    Multiple CSEG Allocations: multiple_cseg_allocations
+    Allocation Percentage: allocation_percentage
+    Actual kWh Allocated: actual_kwh_allocated
+    Initial Bank Balance kWh: initial_balance_kwh
+    kWh Allocated from All Subscriptions: kwh_allocated_from_all_subscriptions
+    Subscriber Billed Usage: subscriber_billed_usage
+    Adjustment kWh: adjustment_kwh
+    Final Bank Balance kWh: final_balance_kwh
+    Community Solar Adjustment: community_solar_adjustment
+    TOU Usage On Peak kWh: tou_usage_on_peak_kwh
+    TOU Usage Intermediate Peak kWh: tou_usage_intermediate_peak_kwh
+    TOU Usage Off Peak kWh: tou_usage_off_peak_kwh
