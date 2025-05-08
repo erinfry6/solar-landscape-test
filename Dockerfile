@@ -13,4 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8000
 
 # Run the application
-CMD ["python", "main.py"]
+CMD ["python", "scripts/run.py"]
+
+# Make the application accessible to other containers or the host
+# CMD ["python", "-m", "http.server", "8000", "--bind", "0.0.0.0"]
