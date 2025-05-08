@@ -19,5 +19,12 @@ if __name__ == "__main__":
             db = Database("data/project_energy.db")
             db.create_tables()
             db.insert_project_info(project_info)
-            db.insert_energy_data(energy_data)
-            print(f"Data for {config_file} uploaded successfully.")
+            try:
+                db.insert_energy_data(energy_data)
+                print(f"Data for {config_file} uploaded successfully.")
+            except Exception as e:
+                db.delete_project_info(project_info['project_id'], project_info['report_run_date'])
+                db.close()
+                raise Exception(f"Failed to upload energy data: {e}")
+            else:
+                db.close()

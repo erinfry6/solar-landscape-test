@@ -65,6 +65,7 @@ class Database:
         df = pd.DataFrame([project_info])
         try:
             df.to_sql('ProjectInfo', self.conn, if_exists='append', index=False, method='multi')
+            self.conn.commit()
         except sqlite3.IntegrityError as e:
             self._process_SQLiteError(e, 'ProjectInfo')
 
@@ -83,10 +84,16 @@ class Database:
 
         try:
             energy_data.to_sql('EnergyData', self.conn, if_exists='append', index=False, method='multi')
+            self.conn.commit()
         except sqlite3.IntegrityError as e:
             self._process_SQLiteError(e, 'EnergyData')
 
 
-    def close(self):
+    def delete_project_info(self, project_id: int, report_run_date: str):
+        self.cursor.execute('''
+        DELETE FROM ProjectInfo WHERE project_id = ? AND report_run_date = ?
+        ''', (project_id, report_run_date))
         self.conn.commit()
+    
+    def close(self):
         self.conn.close()
