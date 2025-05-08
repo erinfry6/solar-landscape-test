@@ -11,7 +11,7 @@ class Database:
         # Create tables if they don't exist
         self.cursor.execute('''
         CREATE TABLE IF NOT EXISTS ProjectInfo (
-            project_id INTEGER PRIMARY KEY,
+            project_id INTEGER NOT NULL,
             project_name TEXT NOT NULL,
             project_status TEXT,
             community_solar_status TEXT,
@@ -24,7 +24,8 @@ class Database:
             electric_choice_id INTEGER,
             bge_csegs_pilot_project_id INTEGER,
             notes TEXT,
-            some_other_field TEXT
+            some_other_field TEXT,
+            UNIQUE(project_id, report_run_date)
         )
         ''')
 
@@ -46,17 +47,26 @@ class Database:
             tou_usage_intermediate_peak_kwh DECIMAL,
             tou_usage_off_peak_kwh DECIMAL,
             FOREIGN KEY (project_id) REFERENCES ProjectInfo (project_id),
-            FOREIGN KEY (report_run_date) REFERENCES ProjectInfo (report_run_date)
+            FOREIGN KEY (report_run_date) REFERENCES ProjectInfo (report_run_date),
+            UNIQUE(project_id, report_run_date, subscriber_choice_id)
         )
         ''')
 
+    def _process_SQLiteError(self, e, table_name: str):
+        if 'UNIQUE' in str(e):
+            raise ValueError(f"You've already uploaded data into {table_name} - {e}")
+        elif 'NOT NULL' in str(e):
+            raise ValueError(f"Error inserting {table_name} - the following field is required: {e}")
+        else:
+            raise ValueError(f"IntegrityError: {e}")
+    
     def insert_project_info(self, project_info: dict):
         
         df = pd.DataFrame([project_info])
         try:
             df.to_sql('ProjectInfo', self.conn, if_exists='append', index=False, method='multi')
         except sqlite3.IntegrityError as e:
-            raise ValueError(f"Error inserting project info - check required metadata fields: {e}")
+            self._process_SQLiteError(e, 'ProjectInfo')
 
 
     def insert_energy_data(self, energy_data: pd.DataFrame):
@@ -74,7 +84,7 @@ class Database:
         try:
             energy_data.to_sql('EnergyData', self.conn, if_exists='append', index=False, method='multi')
         except sqlite3.IntegrityError as e:
-            raise ValueError(f"Error inserting project info - check required energy data fields: {e}")
+            self._process_SQLiteError(e, 'EnergyData')
 
 
     def close(self):
