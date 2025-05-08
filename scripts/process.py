@@ -3,7 +3,7 @@ from typing import Union
 
 import yaml
 
-from utils import read_excel_cells
+from utils import read_excel_cells, trim_dataframe_at_string
 
 class ProjectInfo:
     def __init__(self, file_path: str = "data/Project Information.xlsx"):
@@ -36,7 +36,7 @@ class CommunitySolar:
         self.metadata_config = self.config['metadata']
         self.data_config = self.config['energy_data']
 
-    def read_metadata(self):
+    def read_metadata(self) -> dict:
         """
         Load metadata from the specified Excel file and sheet.
         """
@@ -52,7 +52,7 @@ class CommunitySolar:
         return metadata
 
     
-    def get_energy_data(self):
+    def get_energy_data(self) -> pd.DataFrame:
         """
         Load energy data from the specified Excel file and sheet.
         """
@@ -62,7 +62,14 @@ class CommunitySolar:
             energy_data.rename(columns=rename_columns, inplace=True)
         
         return energy_data
+    
+    def process_energy_data(self) -> pd.DataFrame:
+        energy_data = self.get_energy_data()
+        trimmed_data = trim_dataframe_at_string(energy_data)
+        
+        ## TODO quality checks, flags for na?
+        return trimmed_data
 
 if __name__ == "__main__":
     solar_data = CommunitySolar()
-    print(solar_data.get_energy_data().columns)
+    print(solar_data.process_energy_data())
