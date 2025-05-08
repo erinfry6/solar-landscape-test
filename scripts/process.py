@@ -27,8 +27,6 @@ class ProjectInfo:
             return project_info["Project Status"] == "ACTIVE" and project_info["Community Solar Status"] == "ACTIVE"    
         return False
     
-    # TODO should we validate that a project is active and provide descriptive error messages? 
-    
 class CommunitySolar:
     def __init__(self, config_path: str = "config/project/BGE Community Solar Pilot Program.yaml"):
         with open(config_path, 'r') as file:
@@ -86,6 +84,11 @@ class CommunitySolar:
         
         trimmed_data['project_id'] = project_id
         trimmed_data['report_run_date'] = report_run_date
+
+        # assert allocation_percentages > 0
+        allocation_percentages = trimmed_data['allocation_percentage'].apply(lambda x: True if x > 0 else False)
+        #fill na with 0
+        allocation_percentages = allocation_percentages.fillna(0)
+        assert allocation_percentages.apply(lambda x: True if x >= 0 else False).all(), "Allocation percentages must be greater than 0"
         
-        ## TODO quality checks, flags for na?
         return trimmed_data
